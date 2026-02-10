@@ -1,0 +1,113 @@
+{
+  "model_id": "zai-org/GLM-OCR",
+  "dtype": "float16",
+  "opset": 18,
+  "max_seq_len": 2048,
+  "image_size": {
+    "width": 840,
+    "height": 840
+  },
+  "image_token_id": 59280,
+  "eos_token_ids": [
+    59246,
+    59253
+  ],
+  "kv_cache": {
+    "num_layers": 16,
+    "num_key_value_heads": 8,
+    "head_dim": 96,
+    "max_cache_len": 2048
+  },
+  "prompt_profile": "document",
+  "base_url": "./_local/variants/custom_w8_prefill8m_dual_vision/",
+  "graphs": {
+    "vision": "fp16/glm_ocr_vision.onnx",
+    "embed": "fp16/glm_ocr_embed.onnx",
+    "rope": "fp16/glm_ocr_rope_document.onnx",
+    "decode_prefill_kv": "fp16/glm_ocr_decode_prefill_kv.onnx",
+    "decode_step_kv": "fp16/glm_ocr_decode_step_kv.onnx",
+    "vision_quant": "quant/glm_ocr_vision_quant.onnx"
+  },
+  "runtime": {
+    "webgpu": {
+      "executionProviders": [
+        "webgpu"
+      ],
+      "logSeverityLevel": 3
+    },
+    "wasm": {
+      "executionProviders": [
+        "wasm"
+      ],
+      "logSeverityLevel": 3
+    }
+  },
+  "profiles": {
+    "full_browser_kv": {
+      "description": "All sessions in browser, KV prefill+step decoding.",
+      "graphs": [
+        "vision",
+        "embed",
+        "rope",
+        "decode_prefill_kv",
+        "decode_step_kv"
+      ],
+      "requires_image_embeds_input": false,
+      "estimated_weight_gb": 18.254
+    },
+    "hybrid_server_vision_client_kv": {
+      "description": "Vision/image embedding runs on server; browser runs text decode with KV.",
+      "graphs": [
+        "embed",
+        "rope",
+        "decode_prefill_kv",
+        "decode_step_kv"
+      ],
+      "requires_image_embeds_input": true,
+      "estimated_weight_gb": 4.683
+    },
+    "hybrid_server_vision_client_prefill_only": {
+      "description": "Vision on server; browser uses decode_prefill_kv only (simpler, slower token loop).",
+      "graphs": [
+        "embed",
+        "rope",
+        "decode_prefill_kv"
+      ],
+      "requires_image_embeds_input": true,
+      "estimated_weight_gb": 2.511
+    }
+  },
+  "load_order": [
+    "vision",
+    "vision_quant",
+    "embed",
+    "rope",
+    "decode_prefill_kv",
+    "decode_step_kv"
+  ],
+  "memory_budget_gb": {
+    "full_browser_kv": 18.254,
+    "full_browser_prefill_only": 16.082,
+    "hybrid_server_vision_client_kv": 4.683,
+    "hybrid_server_vision_client_prefill_only": 2.511
+  },
+  "per_graph_size_gb": {
+    "vision": 13.571,
+    "embed": 0.34,
+    "rope_profile": 0.0,
+    "decode_prefill_kv": 2.171,
+    "decode_step_kv": 2.172,
+    "vision_quant": 0.0
+  },
+  "warnings": [
+    "vision is 13.57 GB; likely too large for direct browser startup on most clients.",
+    "decode_prefill_kv is 2.17 GB; likely too large for direct browser startup on most clients.",
+    "decode_step_kv is 2.17 GB; likely too large for direct browser startup on most clients."
+  ],
+  "notes": [
+    "This manifest is for ORT Web (WebGPU/WASM) session wiring.",
+    "Prefer lazy session creation; do not load unused graphs.",
+    "Use rope graph matching the exported prompt profile.",
+    "For browser deployments, hybrid mode is usually required at current model size."
+  ]
+}

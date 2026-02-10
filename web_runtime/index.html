@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GLM-OCR Web Runtime Demo</title>
+    <style>
+      body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
+      .row { margin-bottom: 12px; }
+      pre { background: #111; color: #eee; padding: 12px; overflow: auto; }
+      button { padding: 8px 12px; }
+    </style>
+  </head>
+  <body>
+    <h1>GLM-OCR TypeScript Runtime (Static Browser Demo)</h1>
+    <div class="row">
+      <input id="image-file" type="file" accept="image/*" />
+      <input id="input-json" type="file" accept=".json,application/json" />
+      <button id="run">Run Decode</button>
+    </div>
+    <div class="row">
+      Use an image file for browser-side preprocessing, or provide preprocessed JSON.
+    </div>
+    <div class="row">
+      <label for="profile">Profile:</label>
+      <select id="profile">
+        <option value="hybrid_server_vision_client_kv" selected>hybrid_server_vision_client_kv</option>
+        <option value="full_browser_kv">full_browser_kv</option>
+        <option value="hybrid_server_vision_client_prefill_only">hybrid_server_vision_client_prefill_only</option>
+      </select>
+      <label for="ep">EP:</label>
+      <select id="ep">
+        <option value="webgpu" selected>webgpu</option>
+        <option value="wasm">wasm</option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="task">Task:</label>
+      <select id="task">
+        <option value="document" selected>document</option>
+        <option value="text">text</option>
+        <option value="table">table</option>
+        <option value="formula">formula</option>
+      </select>
+      <label for="vision-policy">Vision Policy:</label>
+      <select id="vision-policy">
+        <option value="fp16" selected>fp16</option>
+        <option value="table_quant">table_quant</option>
+        <option value="auto">auto</option>
+        <option value="quant">quant</option>
+      </select>
+    </div>
+    <div class="row">
+      <strong>Status</strong>
+      <pre id="status">idle</pre>
+    </div>
+    <div class="row">
+      <strong>Output</strong>
+      <pre id="output">{}</pre>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.all.min.js"></script>
+    <script type="module" src="./dist/demo.js"></script>
+  </body>
+</html>

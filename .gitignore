@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+web_runtime/node_modules/
+web_runtime/dist/
+_local/

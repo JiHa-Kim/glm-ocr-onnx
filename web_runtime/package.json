@@ -1,0 +1,14 @@
+{
+  "name": "glm-ocr-web-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "bun@1.3.3",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
